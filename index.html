@@ -12,22 +12,35 @@
 <script type='text/javascript'>
 
   // Aca ponemos la referencia a su firebase
-  var messagesRef = new Firebase('https://algo.firebaseio-demo.com/');
-
+//  var messagesRef = new Firebase('https://algo.firebaseio-demo.com/');
+   var messagesRef = new Firebase('https://chat1-9d2a8.firebaseio.com/usuarios/'); 
   // Cuando presionen el ENTER , guardamos los datos en firebase.
   $('#messageInput').keypress(function (e) {
     if (e.keyCode == 13) {
       var name = $('#nameInput').val();
       var text = $('#messageInput').val();
-      messagesRef.push({name:name, text:text});
+      var fecha = Firebase.ServerValue.TIMESTAMP;
+      //console.log(fecha);
+      messagesRef.push({Usuario:name, Mensaje:text,Fecha:fecha});
       $('#messageInput').val('');
     }
   });
 
   // agregamos la funcion que funciona de callback que es disparada por cada mensaje de chat.
   messagesRef.on('child_added', function (snapshot) {
-    var message = snapshot.val();
-    $('<div/>').text(message.text).prepend($('<em/>').text(message.name+': ')).appendTo($('#messagesDiv'));
+    var message = snapshot.val();// lo que recibe la funcion
+    var fecha = new Date();
+    console.log(fecha);
+    var hora= fecha.getHours();
+    var minutos = fecha.getMinutes();
+    var segundos = fecha.getSeconds();
+    var milisegundos = fecha.getMilliseconds();
+    var dia = fecha.getDay();
+    var dia2 =fecha.getDate();
+    var mes = fecha.getMonth();
+    var ano = fecha.getYear();
+    
+    $('<div/>').text(message.Mensaje+'---->'+dia2+'/'+mes+'/'+ano+'---->'+hora+':'+minutos+':'+segundos+'----->'+message.Fecha).prepend($('<em/>').text(message.Usuario+': ')).appendTo($('#messagesDiv'));
     $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   });
 </script>
